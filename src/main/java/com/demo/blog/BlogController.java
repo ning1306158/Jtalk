@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.demo.common.model.Blog;
 
@@ -24,7 +26,7 @@ public class BlogController extends Controller {
 
 	@Inject
 	BlogService service;
-
+	List<String> conver=new ArrayList<String>();
 	public void index() {
 		render("A.html");
 	}
@@ -34,6 +36,12 @@ public class BlogController extends Controller {
 	}
 	public void talk() {
 		render("talk.html");
+	}
+	public void conversation() {
+		String s=get("content");
+//		conver.add(s);
+		System.out.println(s);
+		renderJson("AAA");
 	}
 
 	public void accept() {

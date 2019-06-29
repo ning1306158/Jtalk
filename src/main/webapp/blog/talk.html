@@ -2,10 +2,35 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script type="text/javascript" ></script>
+<script type="text/javascript" src="/blog/jquery-3.4.1.min.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
 
+	<textarea rows="25" cols="60" readonly="readonly" name=talk></textarea>
+
+	<input type="text" name=content id="content">
+	<button type="submit" id="send">发送</button>
 </body>
+<script type="text/javascript">
+	var content = $("#content").val
+	var formData = new FormData();
+	formData.append('content', content);
+
+	$("#send").click(function() {
+		$.ajax({
+			url : "/blog/conversation",
+			dataType : "json",
+			async : true,
+			data : formData,
+			success : function(data) {
+				console.log(data);
+				alert("success");
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("shibai")
+			},
+		});
+	});
+</script>
 </html>
