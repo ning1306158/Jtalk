@@ -11,7 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.demo.common.model.Blog;
 
@@ -26,7 +28,8 @@ public class BlogController extends Controller {
 
 	@Inject
 	BlogService service;
-	List<String> conver=new ArrayList<String>();
+	List<String> conver = new ArrayList<String>();
+
 	public void index() {
 		render("A.html");
 	}
@@ -34,14 +37,17 @@ public class BlogController extends Controller {
 	public void add() {
 		System.out.println("A");
 	}
+
 	public void talk() {
 		render("talk.html");
 	}
+
 	public void conversation() {
-		String s=get("content");
-//		conver.add(s);
+		String s = get("content");
 		System.out.println(s);
-		renderJson("AAA");
+		Map<String, String> m = new HashMap<>();
+		m.put("A", "V");
+		renderJson(m);
 	}
 
 	public void accept() {
