@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="/blog/jquery-3.4.1.min.js"></script>
+<title>Insert title here</title>
+</head>
+<body>
+
+	<textarea rows="25" cols="60" readonly="readonly" name='talk' id='talk'></textarea>
+	<br>
+
+	<form id=form>
+		<input type="text" name=content id="content">
+		<button type="button" id="send">发送</button>
+	</form>
+</body>
+<script type="text/javascript">
+	$("#send").click(function() {
+		$("#talk").append("我:\n")
+		$("#talk").append($("#content").val()).append("\n")
+		$.ajax({
+			url : "/blog/conversation",
+			method : 'post',
+			dataType : 'json',
+			data : $("#form").serialize(),
+			success : function(result) {
+				console.log(result)
+				$("#talk").append(result['A'])
+			}
+		});
+
+	});
+</script>
+</html>

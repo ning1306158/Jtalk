@@ -11,9 +11,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.Cookie;
 
 import com.demo.common.model.Blog;
 
@@ -39,15 +42,18 @@ public class BlogController extends Controller {
 	}
 
 	public void talk() {
-		render("talk.html");
+		render("ta.html");
 	}
 
 	public void conversation() {
 		String s = get("content");
-		System.out.println(s);
-		Map<String, String> m = new HashMap<>();
-		m.put("A", "V");
-		renderJson(m);
+		Cookie[] cookieObjects = getCookieObjects();
+		for (Cookie cookie : cookieObjects) {
+			System.out.println(cookie.getName());
+			System.out.println(cookie.getValue());
+		}
+		renderJson();
+
 	}
 
 	public void accept() {
