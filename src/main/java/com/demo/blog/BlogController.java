@@ -38,7 +38,9 @@ public class BlogController extends Controller {
 	}
 
 	public void login() {
-		getPa
+		String name = getPara("name");
+		setCookie(new Cookie("name", name));
+		render("ta.html");
 	}
 
 	public void talk() {
