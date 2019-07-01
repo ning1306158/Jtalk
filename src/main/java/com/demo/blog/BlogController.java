@@ -37,8 +37,8 @@ public class BlogController extends Controller {
 		render("A.html");
 	}
 
-	public void add() {
-		System.out.println("A");
+	public void login() {
+		getPa
 	}
 
 	public void talk() {

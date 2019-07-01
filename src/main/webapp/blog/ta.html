@@ -18,7 +18,7 @@
 <script type="text/javascript">
 	$("#send").click(function() {
 		$("#talk").append("我:\n")
-		$("#talk").append($("#content").val()).append("\n")
+		$("#talk").append("  "+$("#content").val()).append("\n")
 		$.ajax({
 			url : "/blog/conversation",
 			method : 'post',
