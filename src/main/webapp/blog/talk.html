@@ -6,28 +6,48 @@
 <title>Insert title here</title>
 </head>
 <body>
-
 	<textarea rows="25" cols="60" readonly="readonly" name='talk' id='talk'></textarea>
 	<br>
-
 	<form id=form>
 		<input type="text" name=content id="content">
 		<button type="button" id="send">发送</button>
 	</form>
 </body>
 <script type="text/javascript">
-	$("#send").click(function() {
-
+	$("#send").click(send);
+	function send() {
+		var data = $("#form").serialize();
+		$("#content").val('');
 		$.ajax({
 			url : "/blog/conversation",
 			method : 'post',
-			dataType:'json',
-			data : $("#form").serialize(),
+			dataType : 'json',
+			data : data,
 			success : function(result) {
-				alert(result)
 			}
 		});
 
-	});
+	}
+	$('#form').keypress(function(e) {
+		if (e.keyCode == 13) {
+			send();
+			return false;
+		}
+	})
+	function showAuto() {
+		$.ajax({
+			url : "/blog/getAll",
+			method : 'post',
+			dataType : 'json',
+			success : function(result) {
+				console.log(result)
+				if (result['name'] != undefined) {
+					$("#talk").append(result['name'] + ":\n")
+					$("#talk").append("  " + result['content']).append("\n")
+				}
+			}
+		})
+	}
+	t = setInterval(showAuto, 1000);
 </script>
 </html>

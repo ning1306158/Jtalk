@@ -1,4 +1,4 @@
-package com.demo.c;
+package com.demo.co;
 
 import com.demo.blog.BlogController;
 import com.demo.blog.TalkController;

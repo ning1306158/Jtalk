@@ -10,14 +10,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import com.demo.bean.Conversation;
 import com.demo.common.model.Blog;
 
 /**
@@ -31,31 +36,66 @@ public class BlogController extends Controller {
 
 	@Inject
 	BlogService service;
-	List<String> conver = new ArrayList<String>();
+	List<Conversation> conver = new LinkedList<Conversation>();
 
 	public void index() {
 		render("A.html");
 	}
 
 	public void login() {
-		String name = getPara("name");
-		setCookie(new Cookie("name", name));
-		render("ta.html");
+		try {
+			String name = getPara("name");
+			if (name == null)
+				render("login.html");
+			else {
+				setCookie("name", URLEncoder.encode(name, "utf-8"), -1);
+				render("talk.html");
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void toLogin() {
+		render("login.html");
 	}
 
 	public void talk() {
-		render("ta.html");
+		render("talk.html");
+	}
+
+	public void getAll() {
+		if (conver.size() > 0) {
+			Conversation c = conver.get(0);
+			renderJson(c);
+		} else {
+			renderJson();
+		}
+
 	}
 
 	public void conversation() {
-		String s = get("content");
-		Cookie[] cookieObjects = getCookieObjects();
-		for (Cookie cookie : cookieObjects) {
-			System.out.println(cookie.getName());
-			System.out.println(cookie.getValue());
+		try {
+			String s = get("content");
+			String name = getCookie("name");
+			Conversation conversation = new Conversation();
+			conversation.setContent(s);
+			if (name != null) {
+				conversation.setName(URLDecoder.decode(name, "utf-8"));
+			} else {
+				name = "未命名" + (int) (Math.random() * 1000);
+				setCookie("name", URLEncoder.encode(name, "utf-8"), -1);
+				conversation.setName(name);
+			}
+			if (s != null && !s.equals("")) {
+				renderJson(conversation);
+				conver.add(conversation);
+			} else {
+				renderJson();
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
-		renderJson();
-
 	}
 
 	public void accept() {

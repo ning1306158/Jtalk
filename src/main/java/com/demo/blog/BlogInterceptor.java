@@ -13,16 +13,6 @@ import com.jfinal.core.Controller;
 public class BlogInterceptor implements Interceptor {
 
 	public void intercept(Invocation inv) {
-		if (!inv.getActionKey().endsWith("login")) {
-			Controller controller = inv.getController();
-			if (controller.getSession().getId().equals(controller.getCookie("JSESSIONID"))
-					&& !controller.getCookie("name").trim().equals("")) {
-				inv.invoke();
-			} else {
-				controller.render("login.html");
-			}
-		} else {
-			inv.invoke();
-		}
+		inv.invoke();
 	}
 }
