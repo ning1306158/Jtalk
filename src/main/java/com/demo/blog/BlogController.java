@@ -65,6 +65,8 @@ public class BlogController extends Controller {
 			if (name == null)
 				render("login.html");
 			else {
+				if(name.length()>6)
+					name=name.substring(0,6);
 				setCookie("name", URLEncoder.encode(name, "utf-8"), -1);
 				render("talk.html");
 			}
@@ -100,7 +102,7 @@ public class BlogController extends Controller {
 				setCookie("name", URLEncoder.encode(name, "utf-8"), -1);
 				conversation.setName(name);
 			}
-			if (s != null && !s.equals("")) {
+			if (s != null && !s.trim().equals("")) {
 				ServletContext context = JFinal.me().getServletContext();
 				object = context.getAttribute("conver");
 				Queue<Conversation> queue;

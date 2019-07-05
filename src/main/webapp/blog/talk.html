@@ -6,14 +6,18 @@
 <title>Insert title here</title>
 </head>
 <body>
+<div align="center">
+
 	<textarea rows="25" cols="60" readonly="readonly" name='talk' id='talk'></textarea>
 	<br>
 	<form id=form>
 		<input type="text" name=content id="content">
 		<button type="button" id="send">发送</button>
 	</form>
+	</div>
 </body>
 <script type="text/javascript">
+
 	$("#send").click(send);
 	function send() {
 		var data = $("#form").serialize();
@@ -42,12 +46,13 @@
 			success : function(result) {
 				console.log(result)
 				if(result!=null) {
-					var len=result.length
 					$("#talk").val('')
+					var len=result.length
+
 					for(var i=0;i<len;i++){
-	
-						$("#talk").append(result[i].name+":\n")
-						$("#talk").append("  "+result[i].content+"\n")
+
+						$("#talk").val($("#talk").val()+result[i].name+":\n")
+						$("#talk").val($("#talk").val()+"  "+result[i].content+"\n")
 					}
 					
 				}
