@@ -41,10 +41,17 @@
 			dataType : 'json',
 			success : function(result) {
 				console.log(result)
-				if (result['name'] != undefined) {
-					$("#talk").append(result['name'] + ":\n")
-					$("#talk").append("  " + result['content']).append("\n")
+				if(result!=null) {
+					var len=result.length
+					$("#talk").val('')
+					for(var i=0;i<len;i++){
+	
+						$("#talk").append(result[i].name+":\n")
+						$("#talk").append("  "+result[i].content+"\n")
+					}
+					
 				}
+				
 			}
 		})
 	}

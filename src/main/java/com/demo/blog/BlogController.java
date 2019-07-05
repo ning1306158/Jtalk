@@ -3,6 +3,7 @@ package com.demo.blog;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
+import com.jfinal.core.JFinal;
 import com.jfinal.upload.UploadFile;
 
 import java.io.File;
@@ -19,7 +20,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
 import com.demo.bean.Conversation;
@@ -36,13 +40,26 @@ public class BlogController extends Controller {
 
 	@Inject
 	BlogService service;
-	List<Conversation> conver = new LinkedList<Conversation>();
+	private Object object;
 
 	public void index() {
 		render("A.html");
 	}
 
+	public void app() {
+		ServletContext context = JFinal.me().getServletContext();
+		Object object = context.getAttribute("count");
+		if (object != null) {
+			context.setAttribute("count", (int) object + 1);
+		} else {
+			context.setAttribute("count", 1);
+		}
+		setAttr("num", object);
+		render("T.html");
+	}
+
 	public void login() {
+		JFinal.me().getServletContext().setAttribute("A", "V");
 		try {
 			String name = getPara("name");
 			if (name == null)
@@ -65,12 +82,8 @@ public class BlogController extends Controller {
 	}
 
 	public void getAll() {
-		if (conver.size() > 0) {
-			Conversation c = conver.get(0);
-			renderJson(c);
-		} else {
-			renderJson();
-		}
+		ServletContext context = JFinal.me().getServletContext();
+		renderJson(context.getAttribute("conver"));
 
 	}
 
@@ -88,8 +101,18 @@ public class BlogController extends Controller {
 				conversation.setName(name);
 			}
 			if (s != null && !s.equals("")) {
+				ServletContext context = JFinal.me().getServletContext();
+				object = context.getAttribute("conver");
+				Queue<Conversation> queue;
+				if (object != null) {
+					queue = (Queue<Conversation>) object;
+				} else {
+					queue = new LinkedBlockingDeque<Conversation>(10);
+				}
+				if(queue.size()>9) queue.poll();
+				queue.add(conversation);
+				context.setAttribute("conver", queue);
 				renderJson(conversation);
-				conver.add(conversation);
 			} else {
 				renderJson();
 			}
