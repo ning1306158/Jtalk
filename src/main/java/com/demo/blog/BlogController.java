@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -27,6 +28,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
 import com.demo.bean.Conversation;
+import com.demo.co.DemoConfig;
 import com.demo.common.model.Blog;
 
 /**
@@ -65,8 +67,8 @@ public class BlogController extends Controller {
 			if (name == null)
 				render("login.html");
 			else {
-				if(name.length()>6)
-					name=name.substring(0,6);
+				if (name.length() > 6)
+					name = name.substring(0, 6);
 				setCookie("name", URLEncoder.encode(name, "utf-8"), -1);
 				render("talk.html");
 			}
@@ -81,6 +83,10 @@ public class BlogController extends Controller {
 
 	public void talk() {
 		render("talk.html");
+	}
+	public void accept() {
+//		System.out.println(getPara('A'));
+		render("A.html");
 	}
 
 	public void getAll() {
@@ -111,7 +117,8 @@ public class BlogController extends Controller {
 				} else {
 					queue = new LinkedBlockingDeque<Conversation>(10);
 				}
-				if(queue.size()>9) queue.poll();
+				if (queue.size() > 9)
+					queue.poll();
 				queue.add(conversation);
 				context.setAttribute("conver", queue);
 				renderJson(conversation);
@@ -123,9 +130,25 @@ public class BlogController extends Controller {
 		}
 	}
 
-	public void accept() {
-		String string = get("A");
-		System.out.println(string);
+	public void acceptFile() {
+		UploadFile uploadFile = getFile();
+		if (uploadFile != null) {
+			File file = uploadFile.getFile();
+			if (file != null) {
+				try {
+					FileReader fr = new FileReader(file);
+					char[] c = new char[1024];
+					int n = -1;
+					while ((n = fr.read(c, 0, 1024)) != -1) {
+//						DemoConfig.console.print(c);
+						System.out.print(c);
+					}
+					fr.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		render("A.html");
 	}
 

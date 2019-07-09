@@ -1,5 +1,9 @@
 package com.demo.co;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 import com.demo.blog.BlogController;
 import com.demo.blog.TalkController;
 import com.demo.index.IndexController;
@@ -9,6 +13,7 @@ import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.core.Const;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.druid.DruidPlugin;
@@ -24,12 +29,22 @@ import com.jfinal.template.Engine;
 public class DemoConfig extends JFinalConfig {
 
 	static Prop p;
+	public static PrintStream console;
+	public static PrintStream ps;
 
 	/**
 	 * 启动入口，运行此 main 方法可以启动项目，此 main 方法可以放置在任意的 Class 类定义中，不一定要放于此
 	 */
 	public static void main(String[] args) {
+		console = System.out;
+		try {
+			ps = new PrintStream(new File("log.txt"));
+			System.setOut(ps);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		UndertowServer.start(DemoConfig.class);
+		System.setOut(console);
 	}
 
 	/**
@@ -47,7 +62,7 @@ public class DemoConfig extends JFinalConfig {
 	 */
 	public void configConstant(Constants me) {
 		loadConfig();
-
+		me.setMaxPostSize(1000*Const.DEFAULT_MAX_POST_SIZE);
 		me.setDevMode(p.getBoolean("devMode", false));
 
 		/**
@@ -107,5 +122,16 @@ public class DemoConfig extends JFinalConfig {
 	 */
 	public void configHandler(Handlers me) {
 
+	}
+
+	@Override
+	public void onStart() {
+//		console = System.out;
+//		try {
+//			ps = new PrintStream(new File("log.txt"));
+//			System.setOut(ps);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
 	}
 }
